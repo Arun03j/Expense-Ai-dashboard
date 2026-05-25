@@ -1,0 +1,13 @@
+export default function Navbar() {
+  return (
+    <header className="h-16 border-b border-zinc-800 bg-zinc-950 flex items-center justify-between px-6">
+      <h2 className="text-white text-xl font-semibold">
+        Dashboard
+      </h2>
+
+      <div className="text-bold-400">
+        Aaron
+      </div>
+    </header>
+  );
+}
