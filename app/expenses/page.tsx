@@ -25,7 +25,7 @@ export default function ExpensesPage() {
       try {
 
         const response = await fetch(
-          "http://172.20.10.5:8000/expenses",
+          "https://expense-ai-dashboard.onrender.com/expenses",
           {
             cache: "no-store",
           }
