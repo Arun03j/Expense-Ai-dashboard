@@ -4,8 +4,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+# Local PostgreSQL URL
+LOCAL_DATABASE_URL = (
+    "postgresql://postgres:postgres123@localhost/expense_ai"
+)
+
+# Use Render/Neon DATABASE_URL if exists
 DATABASE_URL = os.getenv(
-    "DATABASE_URL"
+    "DATABASE_URL",
+    LOCAL_DATABASE_URL
 )
 
 engine = create_engine(
