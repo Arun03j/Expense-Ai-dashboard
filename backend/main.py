@@ -1,34 +1,34 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends
 
 from sqlalchemy.orm import Session
-from fastapi import Depends
 
 from database.database import (
     engine,
-    Base,
     get_db,
+    Base
 )
 
 from models.expense_model import Expense
 
 from schemas.expense_schema import (
     ExpenseCreate,
-    ExpenseResponse,
+    ExpenseResponse
+)
+
+# Create Database Tables
+Base.metadata.create_all(
+    bind=engine
 )
 
 app = FastAPI()
-
-# Create Tables
-Base.metadata.create_all(bind=engine)
 
 # CORS
 app.add_middleware(
     CORSMiddleware,
 
-    allow_origins=[
-        "http://localhost:3000",
-    ],
+    allow_origins=["*"],
 
     allow_credentials=True,
 
@@ -36,7 +36,6 @@ app.add_middleware(
 
     allow_headers=["*"],
 )
-
 
 # Home Route
 @app.get("/")
@@ -47,8 +46,22 @@ def home():
         "Expense AI Backend Running"
     }
 
+# GET Expenses
+@app.get(
+    "/expenses",
+    response_model=list[ExpenseResponse]
+)
+def get_expenses(
+    db: Session = Depends(get_db)
+):
 
-# Add Expense
+    expenses = db.query(
+        Expense
+    ).all()
+
+    return expenses
+
+# POST Expense
 @app.post(
     "/expenses",
     response_model=ExpenseResponse
@@ -66,7 +79,7 @@ def add_expense(
 
         purpose=expense.purpose,
 
-        date=expense.date,
+        date=expense.date
     )
 
     db.add(new_expense)
@@ -77,29 +90,16 @@ def add_expense(
 
     return new_expense
 
-
-# Get Expenses
-@app.get(
-    "/expenses",
-    response_model=list[ExpenseResponse]
-)
-def get_expenses(
-    db: Session = Depends(get_db)
-):
-
-    expenses = db.query(
-        Expense
-    ).all()
-
-    return expenses
-# Delete Expense
+# DELETE Expense
 @app.delete("/expenses/{expense_id}")
 def delete_expense(
     expense_id: int,
     db: Session = Depends(get_db)
 ):
 
-    expense = db.query(Expense).filter(
+    expense = db.query(
+        Expense
+    ).filter(
         Expense.id == expense_id
     ).first()
 

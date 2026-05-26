@@ -1,10 +1,9 @@
 from sqlalchemy import Column
 from sqlalchemy import Integer
-from sqlalchemy import String
 from sqlalchemy import Float
+from sqlalchemy import String
 
 from database.database import Base
-
 
 class Expense(Base):
 

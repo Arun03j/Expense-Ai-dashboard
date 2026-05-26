@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
-
-class ExpenseCreate(BaseModel):
+class ExpenseBase(BaseModel):
 
     amount: float
 
@@ -12,7 +11,11 @@ class ExpenseCreate(BaseModel):
     date: str
 
 
-class ExpenseResponse(ExpenseCreate):
+class ExpenseCreate(ExpenseBase):
+    pass
+
+
+class ExpenseResponse(ExpenseBase):
 
     id: int
 
