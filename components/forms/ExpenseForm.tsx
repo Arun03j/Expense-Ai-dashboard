@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 
+interface Expense {
+  amount: number;
+  category: string;
+  purpose: string;
+  date: string;
+}
+
 interface ExpenseFormProps {
-  addExpense: (expense: {
-    amount: number;
-    category: string;
-    purpose: string;
-    date: string;
-  }) => void;
+  addExpense: (expense: Expense) => void;
 }
 
 export default function ExpenseForm({
@@ -24,20 +26,24 @@ export default function ExpenseForm({
   const [purpose, setPurpose] =
     useState("");
 
-  const [loading, setLoading] =
-    useState(false);
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
 
-  const handleSubmit = async () => {
+    e.preventDefault();
 
+    // Validation
     if (
       !amount ||
       !category ||
       !purpose
     ) {
+      alert(
+        "Please fill all fields"
+      );
+
       return;
     }
-
-    setLoading(true);
 
     const expenseData = {
       amount: Number(amount),
@@ -48,9 +54,10 @@ export default function ExpenseForm({
 
     try {
 
-      // Send data to FastAPI backend
+      // IMPORTANT
+      // Replace with your Render backend URL later
       const response = await fetch(
-        "http://127.0.0.1:8000/expenses",
+        `${process.env.NEXT_PUBLIC_API_URL}/expenses`,
         {
           method: "POST",
 
@@ -65,21 +72,30 @@ export default function ExpenseForm({
         }
       );
 
-      const data =
+      if (!response.ok) {
+
+        throw new Error(
+          "Failed to add expense"
+        );
+
+      }
+
+      const savedExpense =
         await response.json();
 
-      console.log(
-        "Backend Response:",
-        data
-      );
+      addExpense(savedExpense);
 
-      // Update frontend state
-      addExpense(expenseData);
-
-      // Reset form
+      // Clear Form
       setAmount("");
       setCategory("");
       setPurpose("");
+
+      alert(
+        "Expense Added Successfully"
+      );
+
+      // Refresh latest data
+      window.location.reload();
 
     } catch (error) {
 
@@ -88,26 +104,29 @@ export default function ExpenseForm({
         error
       );
 
-    } finally {
-
-      setLoading(false);
+      alert(
+        "Failed to add expense"
+      );
 
     }
   };
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 md:p-6">
 
       <h2 className="text-white text-2xl font-semibold mb-6">
         Add Expense
       </h2>
 
-      <div className="space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6"
+      >
 
         {/* Amount */}
         <div>
 
-          <label className="text-zinc-400 text-sm">
+          <label className="text-zinc-400 block mb-2">
             Amount
           </label>
 
@@ -120,7 +139,7 @@ export default function ExpenseForm({
                 e.target.value
               )
             }
-            className="w-full mt-2 bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-white outline-none"
+            className="w-full bg-black border border-zinc-800 rounded-xl p-4 text-white outline-none"
           />
 
         </div>
@@ -128,7 +147,7 @@ export default function ExpenseForm({
         {/* Category */}
         <div>
 
-          <label className="text-zinc-400 text-sm">
+          <label className="text-zinc-400 block mb-2">
             Category
           </label>
 
@@ -139,33 +158,30 @@ export default function ExpenseForm({
                 e.target.value
               )
             }
-            className="w-full mt-2 bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-white outline-none"
+            className="w-full bg-black border border-zinc-800 rounded-xl p-4 text-white outline-none"
           >
 
-            <option value="">Select Category</option>
+            <option value="">
+              Select Category
+            </option>
 
-<option value="Bills">
-  Bills
-</option>
+            <option value="Labour Wages">
+              Labour Wages
+            </option>
 
-<option value="Rent">
-  Rent
-</option>
+            <option value="Material Cost">
+              Material Cost
+            </option>
 
-<option value="Labour Wages">
-  Labour Wages
-</option>
+            
 
-<option value="Material Cost">
-  Material Cost
-</option>
+            <option value="Bills">
+              Bills
+            </option>
 
-
-<option value="Others">
-  Others
-</option>
-
-
+            <option value="Rent">
+              Rent
+            </option>
 
           </select>
 
@@ -174,7 +190,7 @@ export default function ExpenseForm({
         {/* Purpose */}
         <div>
 
-          <label className="text-zinc-400 text-sm">
+          <label className="text-zinc-400 block mb-2">
             Purpose
           </label>
 
@@ -187,25 +203,20 @@ export default function ExpenseForm({
                 e.target.value
               )
             }
-            className="w-full mt-2 bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-white outline-none"
+            className="w-full bg-black border border-zinc-800 rounded-xl p-4 text-white outline-none"
           />
 
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full bg-emerald-500 hover:bg-emerald-600 transition-all text-white font-semibold py-3 rounded-xl"
+          type="submit"
+          className="w-full bg-emerald-500 hover:bg-emerald-600 transition-all text-white font-semibold py-4 rounded-xl"
         >
-
-          {loading
-            ? "Adding..."
-            : "Add Expense"}
-
+          Add Expense
         </button>
 
-      </div>
+      </form>
 
     </div>
   );
