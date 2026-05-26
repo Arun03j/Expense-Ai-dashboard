@@ -62,33 +62,48 @@ def get_expenses(
     return expenses
 
 # POST Expense
-@app.post(
-    "/expenses",
-    response_model=ExpenseResponse
-)
+@app.post("/expenses")
 def add_expense(
     expense: ExpenseCreate,
     db: Session = Depends(get_db)
 ):
 
-    new_expense = Expense(
+    try:
 
-        amount=expense.amount,
+        print("=== POST REQUEST RECEIVED ===")
 
-        category=expense.category,
+        print(expense)
 
-        purpose=expense.purpose,
+        new_expense = Expense(
 
-        date=expense.date
-    )
+            amount=expense.amount,
 
-    db.add(new_expense)
+            category=expense.category,
 
-    db.commit()
+            purpose=expense.purpose,
 
-    db.refresh(new_expense)
+            date=expense.date
+        )
 
-    return new_expense
+        db.add(new_expense)
+
+        db.commit()
+
+        db.refresh(new_expense)
+
+        print("=== SAVED SUCCESSFULLY ===")
+
+        return new_expense
+
+    except Exception as e:
+
+        print("=== POST ERROR ===")
+
+        print(str(e))
+
+        return {
+            "error": str(e)
+        }
 
 # DELETE Expense
 @app.delete("/expenses/{expense_id}")
