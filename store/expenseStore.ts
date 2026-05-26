@@ -1,11 +1,6 @@
 import { create } from "zustand";
 
-interface Expense {
-  amount: number;
-  category: string;
-  purpose: string;
-  date: string;
-}
+import { Expense } from "@/types/expense";
 
 interface ExpenseStore {
 
@@ -26,6 +21,7 @@ export const useExpenseStore =
     expenses: [],
 
     addExpense: (expense) =>
+
       set((state) => ({
         expenses: [
           ...state.expenses,
@@ -34,8 +30,6 @@ export const useExpenseStore =
       })),
 
     setExpenses: (expenses) =>
-      set({
-        expenses,
-      }),
+      set({ expenses }),
 
   }));

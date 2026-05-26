@@ -1,12 +1,5 @@
 "use client";
-
-interface Expense {
-  id?: number;
-  amount: number;
-  category: string;
-  purpose: string;
-  date: string;
-}
+import { Expense } from "@/types/expense";
 
 interface RecentTransactionsProps {
   expenses: Expense[];
@@ -17,18 +10,35 @@ export default function RecentTransactions({
 }: RecentTransactionsProps) {
 
   const handleDelete = async (
-    id?: number
+    id: number
   ) => {
-
-    if (!id) return;
 
     try {
 
-      await fetch(
+      console.log(
+        "Deleting expense:",
+        id
+      );
+
+      const response = await fetch(
+
         `${process.env.NEXT_PUBLIC_API_URL}expenses/${id}`,
+
         {
           method: "DELETE",
         }
+      );
+
+      if (!response.ok) {
+
+        throw new Error(
+          "Delete failed"
+        );
+
+      }
+
+      alert(
+        "Expense deleted successfully"
       );
 
       // Refresh page
@@ -41,23 +51,27 @@ export default function RecentTransactions({
         error
       );
 
+      alert(
+        "Failed to delete expense"
+      );
+
     }
   };
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 md:p-6">
 
       <h2 className="text-white text-2xl font-semibold mb-6">
         Recent Transactions
       </h2>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto w-full">
 
-        <table className="w-full">
+        <table className="w-full min-w-[700px]">
 
           <thead>
 
-            <tr className="text-left text-zinc-400 border-b border-zinc-800">
+            <tr className="border-b border-zinc-800 text-left text-zinc-400">
 
               <th className="pb-4">
                 Category
@@ -85,51 +99,49 @@ export default function RecentTransactions({
 
           <tbody>
 
-            {expenses.map(
-              (expense, index) => (
+            {expenses.map((expense) => (
 
-                <tr
-                  key={index}
-                  className="border-b border-zinc-800"
-                >
+              <tr
+                key={expense.id}
+                className="border-b border-zinc-800"
+              >
 
-                  <td className="py-4 text-white">
-                    {expense.category}
-                  </td>
+                <td className="py-4 text-white">
+                  {expense.category}
+                </td>
 
-                  <td className="py-4 text-zinc-400">
-                    {expense.purpose}
-                  </td>
+                <td className="py-4 text-zinc-400">
+                  {expense.purpose}
+                </td>
 
-                  <td className="py-4 text-emerald-400 font-semibold">
-                    ₹{expense.amount}
-                  </td>
+                <td className="py-4 text-emerald-400 font-semibold">
+                  ₹{expense.amount}
+                </td>
 
-                  <td className="py-4 text-zinc-500">
-                    {new Date(
-                      expense.date
-                    ).toLocaleDateString()}
-                  </td>
+                <td className="py-4 text-zinc-500">
+                  {new Date(
+                    expense.date
+                  ).toLocaleDateString()}
+                </td>
 
-                  <td className="py-4">
+                <td className="py-4">
 
-                    <button
-                      onClick={() =>
-                        handleDelete(
-                          expense.id
-                        )
-                      }
-                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition-all"
-                    >
-                      Delete
-                    </button>
+                  <button
+                    onClick={() =>
+                      handleDelete(
+                        expense.id
+                      )
+                    }
+                    className="bg-red-500 hover:bg-red-600 transition-all text-white px-4 py-2 rounded-xl"
+                  >
+                    Delete
+                  </button>
 
-                  </td>
+                </td>
 
-                </tr>
+              </tr>
 
-              )
-            )}
+            ))}
 
           </tbody>
 

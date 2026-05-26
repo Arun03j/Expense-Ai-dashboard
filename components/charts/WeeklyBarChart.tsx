@@ -10,12 +10,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-interface Expense {
-  amount: number;
-  category: string;
-  purpose: string;
-  date: string;
-}
+import { Expense } from "@/types/expense";
 
 interface WeeklyBarChartProps {
   expenses: Expense[];

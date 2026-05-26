@@ -1,13 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { Expense } from "@/types/expense";
 
-interface Expense {
-  amount: number;
-  category: string;
-  purpose: string;
-  date: string;
-}
 
 interface ExpenseFormProps {
   addExpense: (expense: Expense) => void;
