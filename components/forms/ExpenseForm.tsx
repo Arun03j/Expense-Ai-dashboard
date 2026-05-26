@@ -57,7 +57,7 @@ export default function ExpenseForm({
       // IMPORTANT
       // Replace with your Render backend URL later
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/expenses`,
+        `${process.env.NEXT_PUBLIC_API_URL}expenses`,
         {
           method: "POST",
 
