@@ -49,62 +49,69 @@ export default function ExpenseForm({
 
     try {
 
-      // IMPORTANT
-      // Replace with your Render backend URL later
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}expenses`,
-        {
-          method: "POST",
+  const controller =
+    new AbortController();
 
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
+  const timeoutId =
+    setTimeout(
+      () => controller.abort(),
+      30000
+    );
 
-          body: JSON.stringify(
-            expenseData
-          ),
-        }
-      );
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}expenses`,
+    {
+      method: "POST",
 
-      if (!response.ok) {
+      headers: {
+        "Content-Type":
+          "application/json",
+      },
 
-        throw new Error(
-          "Failed to add expense"
-        );
+      body: JSON.stringify(
+        expenseData
+      ),
 
-      }
-
-      const savedExpense =
-        await response.json();
-
-      addExpense(savedExpense);
-
-      // Clear Form
-      setAmount("");
-      setCategory("");
-      setPurpose("");
-
-      alert(
-        "Expense Added Successfully"
-      );
-
-      // Refresh latest data
-      window.location.reload();
-
-    } catch (error) {
-
-      console.error(
-        "Error adding expense:",
-        error
-      );
-
-      alert(
-        "Failed to add expense"
-      );
-
+      signal:
+        controller.signal,
     }
-  };
+  );
+
+  clearTimeout(timeoutId);
+
+  if (!response.ok) {
+
+    throw new Error(
+      "Failed to add expense"
+    );
+  }
+
+  const savedExpense =
+    await response.json();
+
+  addExpense(savedExpense);
+
+  setAmount("");
+  setCategory("");
+  setPurpose("");
+
+  alert(
+    "Expense Added Successfully"
+  );
+
+  window.location.reload();
+
+} catch (error) {
+
+  console.error(
+    "Add Expense Error:",
+    error
+  );
+
+  alert(
+    "Backend is waking up. Please try again in a few seconds."
+  );
+}};
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 md:p-6">

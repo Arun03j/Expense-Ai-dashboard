@@ -23,6 +23,9 @@ export default function AnalyticsPage() {
   const [selectedFilter, setSelectedFilter] =
     useState("All");
 
+  const [loading, setLoading] =
+    useState(true);
+
   useEffect(() => {
 
     const fetchExpenses = async () => {
@@ -36,14 +39,34 @@ export default function AnalyticsPage() {
           }
         );
 
-        const data = await response.json();
+        if (!response.ok) {
 
-        setExpenses(data);
+          throw new Error(
+            "Failed to fetch expenses"
+          );
+        }
+
+        const data =
+          await response.json();
+
+        setExpenses(
+          Array.isArray(data)
+            ? data
+            : []
+        );
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          "Fetch Error:",
+          error
+        );
 
+        setExpenses([]);
+
+      } finally {
+
+        setLoading(false);
       }
     };
 
@@ -52,46 +75,61 @@ export default function AnalyticsPage() {
   }, [setExpenses]);
 
   const filteredExpenses =
-    expenses.filter((expense) => {
 
-      const expenseDate =
-        new Date(expense.date);
+    Array.isArray(expenses)
 
-      const now = new Date();
+      ? expenses.filter((expense) => {
 
-      if (selectedFilter === "Today") {
+          const expenseDate =
+            new Date(expense.date);
 
-        return (
-          expenseDate.toDateString() ===
-          now.toDateString()
-        );
-      }
+          const now = new Date();
 
-      if (selectedFilter === "Week") {
+          if (
+            selectedFilter === "Today"
+          ) {
 
-        const oneWeekAgo =
-          new Date();
+            return (
+              expenseDate.toDateString() ===
+              now.toDateString()
+            );
+          }
 
-        oneWeekAgo.setDate(
-          now.getDate() - 7
-        );
+          if (
+            selectedFilter === "Week"
+          ) {
 
-        return expenseDate >= oneWeekAgo;
-      }
+            const oneWeekAgo =
+              new Date();
 
-      if (selectedFilter === "Month") {
+            oneWeekAgo.setDate(
+              now.getDate() - 7
+            );
 
-        return (
-          expenseDate.getMonth() ===
-            now.getMonth() &&
+            return (
+              expenseDate >= oneWeekAgo
+            );
+          }
 
-          expenseDate.getFullYear() ===
-            now.getFullYear()
-        );
-      }
+          if (
+            selectedFilter === "Month"
+          ) {
 
-      return true;
-    });
+            return (
+
+              expenseDate.getMonth() ===
+                now.getMonth() &&
+
+              expenseDate.getFullYear() ===
+                now.getFullYear()
+            );
+          }
+
+          return true;
+
+        })
+
+      : [];
 
   const totalSpending =
     filteredExpenses.reduce(
@@ -141,7 +179,21 @@ export default function AnalyticsPage() {
         0
       );
 
+  if (loading) {
+
+    return (
+      <main className="min-h-screen bg-zinc-950 flex items-center justify-center">
+
+        <h1 className="text-white text-2xl font-bold">
+          Loading Analytics...
+        </h1>
+
+      </main>
+    );
+  }
+
   return (
+
     <main className="min-h-screen bg-zinc-950 lg:flex w-full overflow-hidden">
 
       <Sidebar />
@@ -163,10 +215,11 @@ export default function AnalyticsPage() {
             }
           />
 
-          {/* KPI */}
+          {/* KPI CARDS */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mt-6">
 
             <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
+
               <p className="text-zinc-400 text-sm">
                 Total Spending
               </p>
@@ -174,9 +227,11 @@ export default function AnalyticsPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">
                 ₹{totalSpending}
               </h2>
+
             </div>
 
             <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
+
               <p className="text-zinc-400 text-sm">
                 Monthly Spending
               </p>
@@ -184,9 +239,11 @@ export default function AnalyticsPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">
                 ₹{monthlySpending}
               </h2>
+
             </div>
 
             <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
+
               <p className="text-zinc-400 text-sm">
                 Labour Wages
               </p>
@@ -194,9 +251,11 @@ export default function AnalyticsPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">
                 ₹{labourWages}
               </h2>
+
             </div>
 
             <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
+
               <p className="text-zinc-400 text-sm">
                 Material Cost
               </p>
@@ -204,11 +263,12 @@ export default function AnalyticsPage() {
               <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">
                 ₹{materialCost}
               </h2>
+
             </div>
 
           </div>
 
-          {/* Charts */}
+          {/* CHARTS */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 w-full min-w-0">
 
             <DailySpendingChart
@@ -221,7 +281,7 @@ export default function AnalyticsPage() {
 
           </div>
 
-          {/* Pie */}
+          {/* PIE CHART */}
           <div className="mt-8">
 
             <CategoryPieChart
