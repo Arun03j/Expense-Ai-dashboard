@@ -1,5 +1,7 @@
 "use client";
 
+import { Expense } from "@/types/expense";
+
 import {
   LineChart,
   Line,
@@ -9,8 +11,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { Expense } from "@/types/expense";
-
 interface DailySpendingChartProps {
   expenses: Expense[];
 }
@@ -19,39 +19,48 @@ export default function DailySpendingChart({
   expenses,
 }: DailySpendingChartProps) {
 
-  const groupedData: Record<string, number> = {};
+  const groupedData: Record<
+    string,
+    number
+  > = {};
 
   expenses.forEach((expense) => {
 
-    const day = new Date(expense.date).toLocaleDateString(
+    const day = new Date(
+      expense.date
+    ).toLocaleDateString(
       "en-US",
-      { weekday: "short" }
+      {
+        weekday: "short",
+      }
     );
 
-    if (groupedData[day]) {
-      groupedData[day] += expense.amount;
-    } else {
-      groupedData[day] = expense.amount;
-    }
+    groupedData[day] =
+      (groupedData[day] || 0) +
+      expense.amount;
   });
 
-  const chartData = Object.entries(groupedData).map(
-    ([day, amount]) => ({
+  const chartData =
+    Object.entries(
+      groupedData
+    ).map(([day, amount]) => ({
       day,
       amount,
-    })
-  );
+    }));
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 md:p-6 w-full min-w-0">
 
       <h2 className="text-white text-xl font-semibold mb-6">
         Daily Spending Analytics
       </h2>
 
-      <div className="h-[300px]">
+      <div className="w-full h-[300px] min-w-0">
 
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+  width="100%"
+  height={300}
+>
 
           <LineChart data={chartData}>
 
@@ -60,7 +69,9 @@ export default function DailySpendingChart({
               stroke="#71717a"
             />
 
-            <YAxis stroke="#71717a" />
+            <YAxis
+              stroke="#71717a"
+            />
 
             <Tooltip />
 

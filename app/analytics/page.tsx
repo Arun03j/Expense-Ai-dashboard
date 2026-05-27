@@ -30,7 +30,7 @@ export default function AnalyticsPage() {
       try {
 
         const response = await fetch(
-          "https://expense-ai-dashboard.onrender.com/expenses",
+          `${process.env.NEXT_PUBLIC_API_URL}expenses`,
           {
             cache: "no-store",
           }
@@ -142,11 +142,11 @@ export default function AnalyticsPage() {
       );
 
   return (
-    <main className="min-h-screen bg-zinc-950 lg:flex">
+    <main className="min-h-screen bg-zinc-950 lg:flex w-full overflow-hidden">
 
       <Sidebar />
 
-      <section className="flex-1">
+      <section className="flex-1 min-w-0 overflow-hidden">
 
         <Navbar />
 
@@ -209,7 +209,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Charts */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 w-full min-w-0">
 
             <DailySpendingChart
               expenses={filteredExpenses}

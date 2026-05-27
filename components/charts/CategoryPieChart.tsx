@@ -1,15 +1,14 @@
 "use client";
 
+import { Expense } from "@/types/expense";
+
 import {
   PieChart,
   Pie,
   Cell,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
-
-import { Expense } from "@/types/expense";
 
 interface CategoryPieChartProps {
   expenses: Expense[];
@@ -18,8 +17,8 @@ interface CategoryPieChartProps {
 const COLORS = [
   "#22c55e",
   "#3b82f6",
-  "#f59e0b",
-  "#ef4444",
+  "#f97316",
+  "#eab308",
   "#a855f7",
 ];
 
@@ -27,34 +26,45 @@ export default function CategoryPieChart({
   expenses,
 }: CategoryPieChartProps) {
 
-  const groupedData: Record<string, number> = {};
+  const groupedData: Record<
+    string,
+    number
+  > = {};
 
   expenses.forEach((expense) => {
 
-    if (groupedData[expense.category]) {
-      groupedData[expense.category] += expense.amount;
-    } else {
-      groupedData[expense.category] = expense.amount;
-    }
+    groupedData[
+      expense.category
+    ] =
+      (groupedData[
+        expense.category
+      ] || 0) +
+      expense.amount;
   });
 
-  const chartData = Object.entries(groupedData).map(
-    ([category, amount]) => ({
-      category,
-      amount,
-    })
-  );
+  const chartData =
+    Object.entries(
+      groupedData
+    ).map(
+      ([category, amount]) => ({
+        category,
+        amount,
+      })
+    );
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 md:p-6 w-full min-w-0">
 
       <h2 className="text-white text-xl font-semibold mb-6">
-        Category Expense Analysis
+        Category Analytics
       </h2>
 
-      <div className="h-[350px]">
+      <div className="w-full h-[350px] min-w-0">
 
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+  width="100%"
+  height={350}
+>
 
           <PieChart>
 
@@ -62,24 +72,29 @@ export default function CategoryPieChart({
               data={chartData}
               dataKey="amount"
               nameKey="category"
-              cx="50%"
-              cy="50%"
               outerRadius={120}
               label
             >
 
-              {chartData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
+              {chartData.map(
+                (_, index) => (
+
+                  <Cell
+                    key={index}
+                    fill={
+                      COLORS[
+                        index %
+                          COLORS.length
+                      ]
+                    }
+                  />
+
+                )
+              )}
 
             </Pie>
 
             <Tooltip />
-
-            <Legend />
 
           </PieChart>
 
