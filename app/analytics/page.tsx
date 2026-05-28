@@ -216,57 +216,61 @@ export default function AnalyticsPage() {
           />
 
           {/* KPI CARDS */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mt-6">
+<div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mt-6">
 
-            <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
+  {/* TOTAL SPENDING */}
+  <div className="rounded-3xl p-6 bg-gradient-to-br from-emerald-900/40 to-zinc-900 border border-emerald-700/30 shadow-xl shadow-black/30 hover:scale-[1.02] transition-all duration-300">
 
-              <p className="text-zinc-400 text-sm">
-                Total Spending
-              </p>
+    <p className="text-emerald-300 font-semibold text-sm tracking-wide uppercase">
+      Total Spending
+    </p>
 
-              <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">
-                ₹{totalSpending}
-              </h2>
+    <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-4">
+      ₹{totalSpending}
+    </h2>
 
-            </div>
+  </div>
 
-            <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
+  {/* MONTHLY */}
+  <div className="rounded-3xl p-6 bg-gradient-to-br from-blue-900/40 to-zinc-900 border border-blue-700/30 shadow-xl shadow-black/30 hover:scale-[1.02] transition-all duration-300">
 
-              <p className="text-zinc-400 text-sm">
-                Monthly Spending
-              </p>
+    <p className="text-blue-300 font-semibold text-sm tracking-wide uppercase">
+      Monthly Spending
+    </p>
 
-              <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">
-                ₹{monthlySpending}
-              </h2>
+    <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-4">
+      ₹{monthlySpending}
+    </h2>
 
-            </div>
+  </div>
 
-            <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
+  {/* LABOUR */}
+  <div className="rounded-3xl p-6 bg-gradient-to-br from-orange-900/40 to-zinc-900 border border-orange-700/30 shadow-xl shadow-black/30 hover:scale-[1.02] transition-all duration-300">
 
-              <p className="text-zinc-400 text-sm">
-                Labour Wages
-              </p>
+    <p className="text-orange-300 font-semibold text-sm tracking-wide uppercase">
+      Labour Wages
+    </p>
 
-              <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">
-                ₹{labourWages}
-              </h2>
+    <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-4">
+      ₹{labourWages}
+    </h2>
 
-            </div>
+  </div>
 
-            <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
+  {/* MATERIAL */}
+  <div className="rounded-3xl p-6 bg-gradient-to-br from-purple-900/40 to-zinc-900 border border-purple-700/30 shadow-xl shadow-black/30 hover:scale-[1.02] transition-all duration-300">
 
-              <p className="text-zinc-400 text-sm">
-                Material Cost
-              </p>
+    <p className="text-purple-300 font-semibold text-sm tracking-wide uppercase">
+      Material Cost
+    </p>
 
-              <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">
-                ₹{materialCost}
-              </h2>
+    <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-4">
+      ₹{materialCost}
+    </h2>
 
-            </div>
+  </div>
 
-          </div>
+</div>
 
           {/* CHARTS */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 w-full min-w-0">
