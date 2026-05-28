@@ -24,16 +24,20 @@ Base.metadata.create_all(
 
 app = FastAPI()
 
-# CORS
+# CORS FIX
+origins = [
+
+    "http://localhost:3000",
+
+    "https://expense-ai-dashboard.vercel.app",
+
+]
+
 app.add_middleware(
+
     CORSMiddleware,
 
-    allow_origins=[
-
-        "http://localhost:3000",
-
-        "https://expense-ai-dashboard.vercel.app/analytics",
-    ],
+    allow_origins=origins,
 
     allow_credentials=True,
 
@@ -67,7 +71,10 @@ def get_expenses(
     return expenses
 
 # POST Expense
-@app.post("/expenses")
+@app.post(
+    "/expenses",
+    response_model=ExpenseResponse
+)
 def add_expense(
     expense: ExpenseCreate,
     db: Session = Depends(get_db)
@@ -75,7 +82,9 @@ def add_expense(
 
     try:
 
-        print("=== POST REQUEST RECEIVED ===")
+        print(
+            "=== POST REQUEST RECEIVED ==="
+        )
 
         print(expense)
 
@@ -96,13 +105,17 @@ def add_expense(
 
         db.refresh(new_expense)
 
-        print("=== SAVED SUCCESSFULLY ===")
+        print(
+            "=== SAVED SUCCESSFULLY ==="
+        )
 
         return new_expense
 
     except Exception as e:
 
-        print("=== POST ERROR ===")
+        print(
+            "=== POST ERROR ==="
+        )
 
         print(str(e))
 
