@@ -261,7 +261,7 @@ export default function AnalyticsPage() {
   <div className="rounded-3xl p-6 bg-gradient-to-br from-purple-900/40 to-zinc-900 border border-purple-700/30 shadow-xl shadow-black/30 hover:scale-[1.02] transition-all duration-300">
 
     <p className="text-purple-300 font-semibold text-sm tracking-wide uppercase">
-      Material Cost
+      Material Costs
     </p>
 
     <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-4">
