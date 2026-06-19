@@ -59,7 +59,7 @@ export default function ExpenseForm({
     );
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}expenses`,
+    `${process.env.NEXT_PUBLIC_API_URL}/expenses`,
     {
       method: "POST",
 

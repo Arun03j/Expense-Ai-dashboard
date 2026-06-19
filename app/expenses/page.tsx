@@ -25,19 +25,35 @@ export default function ExpensesPage() {
       try {
 
         const response = await fetch(
-          "https://expense-ai-dashboard.onrender.com/expenses",
+          `${process.env.NEXT_PUBLIC_API_URL}/expenses`,
           {
             cache: "no-store",
           }
         );
 
-        const data = await response.json();
+        if (!response.ok) {
 
-        setExpenses(data);
+          throw new Error(
+            "Failed to fetch expenses"
+          );
+
+        }
+
+        const data =
+          await response.json();
+
+        setExpenses(
+          Array.isArray(data)
+            ? data
+            : []
+        );
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          "Fetch Error:",
+          error
+        );
 
       }
     };
@@ -46,7 +62,7 @@ export default function ExpensesPage() {
 
     const interval = setInterval(
       fetchExpenses,
-      2000
+      5000
     );
 
     return () =>
@@ -55,11 +71,12 @@ export default function ExpensesPage() {
   }, [setExpenses]);
 
   return (
+
     <main className="min-h-screen bg-zinc-950 lg:flex">
 
       <Sidebar />
 
-      <section className="flex-1">
+      <section className="flex-1 min-w-0">
 
         <Navbar />
 
@@ -73,7 +90,7 @@ export default function ExpensesPage() {
             addExpense={addExpense}
           />
 
-          <div className="mt-8 overflow-x-auto">
+          <div className="mt-8">
 
             <RecentTransactions
               expenses={expenses}
@@ -86,5 +103,6 @@ export default function ExpensesPage() {
       </section>
 
     </main>
+
   );
 }
